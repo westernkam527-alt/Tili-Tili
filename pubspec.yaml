@@ -1,43 +1,26 @@
 
-name: Build Tili Tili APK
+name: tili_tili
+description: Tili Tili short video app for India.
+publish_to: 'none'
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+version: 1.0.0+1
 
-permissions:
-  contents: read
+environment:
+  sdk: ^3.13.0
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+dependencies:
+  flutter:
+    sdk: flutter
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  video_player: ^2.9.2
+  share_plus: ^10.1.4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
 
-      - name: Generate Android project files
-        run: |
-          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
-            rm -rf android
-            flutter create --platforms=android --project-name tili_tili .
-          fi
+  flutter_lints: ^4.0.0
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build release APK
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: tili-tili-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-          
+flutter:
+  uses-material-design: true
+  

@@ -1,10 +1,9 @@
 name: Build Tili Tili APK
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+  push:
+    branches: ["main", "master"]
 
 permissions:
   contents: read
@@ -12,16 +11,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -29,13 +21,18 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Generate Android project files
-        run: flutter create --platforms=android --project-name tili_tili .
+      # The repository is missing Android platform files (android/app/build.gradle).
+      # Generate the Android scaffold without replacing the app's lib/main.dart.
+      - name: Generate Android platform files if missing
+        run: |
+          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
+            flutter create . --platforms=android --project-name tili_tili
+          fi
 
-      - name: Get dependencies
+      - name: Install packages
         run: flutter pub get
 
-      - name: Build release APK
+      - name: Build Android release APK
         run: flutter build apk --release
 
       - name: Upload APK

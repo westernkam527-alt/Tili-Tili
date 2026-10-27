@@ -1,18 +1,43 @@
-name: tili_tili
-description: Tili Tili Indian short-video social app starter.
-publish_to: "none"
-version: 1.0.0+1
-environment:
-  sdk: ">=3.3.0 <4.0.0"
-dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.8
-  video_player: ^2.9.2
-  share_plus: ^10.1.2
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^4.0.0
-flutter:
-  uses-material-design: true
+
+name: Build Tili Tili APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Generate Android project files
+        run: |
+          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
+            rm -rf android
+            flutter create --platforms=android --project-name tili_tili .
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: tili-tili-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          

@@ -1,26 +1,8 @@
-
-name: tili_tili
-description: Tili Tili short video app for India.
-publish_to: 'none'
-
-version: 1.0.0+1
-
-environment:
-  sdk: ^3.13.0
-
 dependencies:
   flutter:
     sdk: flutter
-
   video_player: ^2.9.2
-  share_plus: ^10.1.4
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  flutter_lints: ^4.0.0
-
-flutter:
-  uses-material-design: true
+  share_plus: ^10.1.2
+  image_picker: ^1.1.2  # নতুন যোগ করা হলো
+  
   

@@ -1,5 +1,6 @@
+
 name: tili_tili
-description: "A TikTok style short video app built with Flutter."
+description: Tili Tili social media app
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,13 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  video_player: ^2.9.2
-  share_plus: ^10.1.2
-  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter_test
+    sdk: flutter
   flutter_lints: ^3.0.0
 
 flutter:

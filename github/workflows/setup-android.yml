@@ -1,3 +1,4 @@
+
 name: Build Tili Tili APK
 
 on:
@@ -7,8 +8,12 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +30,28 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
-      - name: Generate Android project files
-        run: flutter create --platforms=android .
+      - name: Check Flutter project
+        run: |
+          echo "Checking project files..."
+          pwd
+          ls -la
+          test -f pubspec.yaml || (echo "ERROR: pubspec.yaml is missing" && exit 1)
+          test -d lib || (echo "ERROR: lib folder is missing" && exit 1)
+
+      - name: Generate Android platform
+        run: |
+          flutter create --platforms=android --project-name tili_tili .
+          echo "Checking Android Gradle files..."
+          ls -la android
+          ls -la android/app
+          test -f android/app/build.gradle || test -f android/app/build.gradle.kts
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build release APK
         run: flutter build apk --release
 
       - name: Upload APK
